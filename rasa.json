@@ -1,0 +1,94 @@
+{
+  "$schema": "https://rasa-os.github.io/schema/rasa.schema.v1.json",
+  "contract_version": "1.3.0",
+  "name": "rasa.module.core",
+  "version": "0.1.0",
+  "kind": "module",
+  "aliases": [
+    "module-core"
+  ],
+  "description": "The canonical MODULE template every module Element forks from. Ships the lean module shape + the generic /sync + /promote skills (smart-pull / smart-push against the project's kit/<element>/ clone). Fork this to author a new module.",
+  "source": {
+    "repo": "https://github.com/RasaOS/module-core",
+    "branch": "main"
+  },
+  "tier": "Pro",
+  "capabilities": [],
+  "permissions": [
+    "fs:write",
+    "shell:exec"
+  ],
+  "requires": {
+    "parent_kind": [
+      "domain",
+      "tenant"
+    ]
+  },
+  "rasa": {
+    "role": "module-template",
+    "shape_pattern": "agnostic",
+    "note": "Canonical MODULE template per canon ELEMENT_CONTRACT.md v1.3+ §4 (required files) + §7 (install policies). A module is an L1 mountable capability that a parent domain or tenant pulls in (requires.parent_kind defaults to both). This template ships the lean module shape — the canon-required files + bin/init (kit-aware) + bin/check-manifest + bin/check-shape + a subject-agnostic opt-in starter set under content/ (the generic /sync + /promote skills that smart-pull / smart-push against the project's kit/<element>/ clone, plus meta/capability skills, universal rules, and authoring templates). shape_pattern='agnostic' flags that this template does not commit to a concrete shape; forks set their own. Fork this to author a new module; keep the starter files that fit, delete the rest, populate content/ with the module's capability, and flip the install policies. Distinct from rasa.core (kind: core, the L1 shared bones every Element depends on) and from rasa.module.tasks (a concrete module that forked this shape): module-core is the template for the module KIND."
+  },
+  "element": {
+    "description": "Files mirrored into the install target per canon ELEMENT_CONTRACT.md §7. The template ships a subject-agnostic starter set under content/ — all registered here as opt-in: covered by check-manifest, but NOT installed automatically. Forks change the policy to directory-mirror/file-replace as they adopt/extend content/.",
+    "files": [
+      {
+        "from": "content/README.md",
+        "to": "content/README.md",
+        "policy": "opt-in",
+        "note": "Fork-time guide to the universal starter layer — what ships, why it's subject-agnostic, how forks adopt/extend/delete it. Not installed into consumer projects. Forks delete this + SHAPE.md and replace with their own content/README.md."
+      },
+      {
+        "from": "content/SHAPE.md",
+        "to": "content/SHAPE.md",
+        "policy": "opt-in",
+        "note": "Fork-time guide explaining the module shape patterns (toolkit/structural/hybrid). Not installed into consumer projects. Forks should delete this from their copy and replace with content/README.md describing what's actually shipped."
+      },
+      {
+        "from": "content/skills/",
+        "to": ".claude/skills/",
+        "policy": "opt-in",
+        "note": "Universal starter skills: new-skill, codify, sync, promote, onboard, handoff, resume, update-docs + README conventions. /sync (smart-pull upstream changes) + /promote (smart-push local changes back upstream) both operate against the project's persistent kit/<element>/ clone that bin/init drops in at install. Subject-agnostic — they reference only the Element contract (lockfile, pinned_sha, overrides, install policies, the /kit stash), zero subject knowledge. Forks keep what fits, delete the rest, add their own, and flip policy to directory-mirror to install into consumer projects."
+      },
+      {
+        "from": "content/rules/",
+        "to": ".claude/",
+        "policy": "opt-in",
+        "note": "Universal starter rules: contract-rules.md (Element <-> consumer discipline), output-rules.md (house style), authoring-rules.md (the enforced authoring lifecycle: template -> fill -> validate -> register -> record) + README conventions. Canonical install target is .claude/ root (rules install flat per domain-code precedent). Forks add subject rules here + flip policy."
+      },
+      {
+        "from": "content/templates/",
+        "to": "content/templates/",
+        "policy": "opt-in",
+        "note": "The enforced authoring skeletons (SKILL.md.template, rule.md.template, agent.md.template + README). Authoring-time, not install-time: they guide authoring IN the Element/fork and are validated by bin/check-shape; consumer projects don't need them, so forks keep this entry opt-in even after flipping skills/rules/agents to directory-mirror. The 'to' target is deliberately outside .claude/ — these are not borrowed runtime content and must never be flipped to auto-install."
+      },
+      {
+        "from": "content/agents/",
+        "to": ".claude/agents/",
+        "policy": "opt-in",
+        "note": "Subagent scaffold + README conventions. Ships no starter agents by design — subagents are inherently subject-specific, so there's no subject-agnostic one worth shipping. Forks add agent .md files here + flip policy to directory-mirror."
+      }
+    ]
+  },
+  "seed": {
+    "description": "One-time files copied at install only. Per canon ELEMENT_CONTRACT.md §7.",
+    "files": [
+      {
+        "from": "seed/CLAUDE.md.template",
+        "to": "CLAUDE.md",
+        "policy": "skip-if-exists",
+        "note": "Per-project Claude session contract. Lives in install-target root; project-owned forever. Placeholder-free BY DESIGN: Element identity (name/version/SHA) lives in .claude/rasa.lock.json, the single live source of truth. A skip-if-exists file is never rewritten, so hardcoding identity here would go stale on the first Element update — deferring to the lockfile is the correct choice, not a gap. (The install taxonomy also doesn't substitute placeholders in skip-if-exists files, which aligns with this.) The template points sessions at /onboard, /resume, and /sync from the starter layer."
+      },
+      {
+        "from": "seed/rasa.lock.json.template",
+        "to": ".claude/rasa.lock.json",
+        "policy": "init-only-with-sha",
+        "note": "Stamped with the Element HEAD commit SHA at init time. Lockfile shape per canon Spec §6 (Connection Contract). Substitutes {{ELEMENT_NAME}}, {{ELEMENT_KIND}}, {{ELEMENT_VERSION}}, {{ELEMENT_REPO}}, {{ELEMENT_BRANCH}}, {{ELEMENT_SHA}}, {{TODAY}} placeholders via bin/init's init-only-with-sha handler."
+      }
+    ]
+  },
+  "scaffold": {
+    "description": "Empty directories created at init. v0.1.0 ships none — forks add as needed.",
+    "directories": []
+  }
+}
