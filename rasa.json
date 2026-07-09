@@ -2,7 +2,7 @@
   "$schema": "https://rasa-os.github.io/schema/rasa.schema.v1.json",
   "contract_version": "1.3.0",
   "name": "rasa.module.core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "kind": "module",
   "aliases": [
     "module-core"
@@ -27,7 +27,13 @@
   "rasa": {
     "role": "module-template",
     "shape_pattern": "agnostic",
-    "note": "Canonical MODULE template per canon ELEMENT_CONTRACT.md v1.3+ §4 (required files) + §7 (install policies). A module is an L1 mountable capability that a parent domain or tenant pulls in (requires.parent_kind defaults to both). This template ships the lean module shape — the canon-required files + bin/init (kit-aware) + bin/check-manifest + bin/check-shape + a subject-agnostic opt-in starter set under content/ (the generic /sync + /promote skills that smart-pull / smart-push against the project's kit/<element>/ clone, plus meta/capability skills, universal rules, and authoring templates). shape_pattern='agnostic' flags that this template does not commit to a concrete shape; forks set their own. Fork this to author a new module; keep the starter files that fit, delete the rest, populate content/ with the module's capability, and flip the install policies. Distinct from rasa.core (kind: core, the L1 shared bones every Element depends on) and from rasa.module.tasks (a concrete module that forked this shape): module-core is the template for the module KIND."
+    "note": "Canonical MODULE template per canon ELEMENT_CONTRACT.md v1.3+ §4 (required files) + §7 (install policies). A module is an L1 mountable capability that a parent domain or tenant pulls in (requires.parent_kind defaults to both). This template ships the lean module shape — the canon-required files + bin/init (kit-aware) + bin/check-manifest + bin/check-shape + a subject-agnostic opt-in starter set under content/ (the generic /sync + /promote skills that smart-pull / smart-push against the project's kit/<element>/ clone, plus meta/capability skills, universal rules, and authoring templates). shape_pattern='agnostic' flags that this template does not commit to a concrete shape; forks set their own. Fork this to author a new module; keep the starter files that fit, delete the rest, populate content/ with the module's capability, and flip the install policies. Distinct from rasa.core (kind: core, the L1 shared bones every Element depends on) and from rasa.module.tasks (a concrete module that forked this shape): module-core is the template for the module KIND.",
+    "identity": {
+      "one_liner": "the canonical RasaOS module template every module Element forks from",
+      "role": "module",
+      "subject": "the module template",
+      "goal": "bring the module template into a project as an installable RasaOS module"
+    }
   },
   "element": {
     "description": "Files mirrored into the install target per canon ELEMENT_CONTRACT.md §7. The template ships a subject-agnostic starter set under content/ — all registered here as opt-in: covered by check-manifest, but NOT installed automatically. Forks change the policy to directory-mirror/file-replace as they adopt/extend content/.",
@@ -67,6 +73,12 @@
         "to": ".claude/agents/",
         "policy": "opt-in",
         "note": "Subagent scaffold + README conventions. Ships no starter agents by design — subagents are inherently subject-specific, so there's no subject-agnostic one worth shipping. Forks add agent .md files here + flip policy to directory-mirror."
+      },
+      {
+        "from": "content/skills/whoami/",
+        "to": ".claude/skills/whoami/",
+        "policy": "directory-mirror",
+        "note": "Generic /whoami — states the composed RasaOS identity (canon SA-025)."
       }
     ]
   },
@@ -84,6 +96,12 @@
         "to": ".claude/rasa.lock.json",
         "policy": "init-only-with-sha",
         "note": "Stamped with the Element HEAD commit SHA at init time. Lockfile shape per canon Spec §6 (Connection Contract). Substitutes {{ELEMENT_NAME}}, {{ELEMENT_KIND}}, {{ELEMENT_VERSION}}, {{ELEMENT_REPO}}, {{ELEMENT_BRANCH}}, {{ELEMENT_SHA}}, {{TODAY}} placeholders via bin/init's init-only-with-sha handler."
+      },
+      {
+        "from": "seed/rasa-deployment.md.template",
+        "to": ".claude/rasa-deployment.md",
+        "policy": "skip-if-exists",
+        "note": "The DEPLOYMENT identity layer (SA-025) — project-owned; what this project is, for whom, on what platform. bin/init generates the element layer (.claude/rasa-identity.md) from rasa.identity every install."
       }
     ]
   },

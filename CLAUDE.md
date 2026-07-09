@@ -1,5 +1,8 @@
 # CLAUDE.md — `rasa.module.core`
 
+> **Who you are (SA-025).** `rasa.module.core` — the canonical RasaOS module template every module Element forks from. Substrate: **RasaOS**; role: **module**. On install `bin/init` renders this into `.claude/rasa-identity.md`; `/whoami` composes the full identity with the project's deployment layer.
+
+
 Per-repo working contract for Claude sessions opened inside this
 folder. Extends the user-level Claude contract and the workspace
 contract of the `rasa.tenant.rasaos` tenant; does not override them.

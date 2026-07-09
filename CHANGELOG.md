@@ -4,6 +4,12 @@ Reverse-chronological. Each entry is a version bump.
 
 ---
 
+## 0.1.1 — 2026-07-09
+
+### Element identity layer (canon SA-025)
+
+- Added `rasa.identity` ("the canonical RasaOS module template every module Element forks from"); `bin/init` generates `.claude/rasa-identity.md` from it every install + stamps project-owned `.claude/rasa-deployment.md`; ships `/whoami`; CLAUDE.md "Who you are" header.
+
 ## 0.1.0 — INITIAL (2026-07-09)
 
 The canonical **MODULE template** every `module` Element forks from.
