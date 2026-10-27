@@ -1,0 +1,6 @@
+{
+  "name": "rasa-module-core",
+  "version": "0.1.1",
+  "description": "The canonical MODULE template every module Element forks from. Ships the lean module shape + the generic /sync + /promote skills (smart-pull / smart-push against the project's kit/<element>/ clone). Fork this to author a new module.",
+  "skills": "./content/skills/"
+}
